@@ -1,0 +1,120 @@
+// UNI-find Marketplace App Main JavaScript
+
+// ---- Global State ----
+let currentSection = "marketplace";
+let marketplaceItems = [];
+let lostFoundItems = [];
+let currentFilter = "all";
+let currentLFFilter = "all";
+
+// ---- API Functions (Replace URLs with your actual endpoints if needed) ----
+async function fetchMarketplaceItems() {
+  try {
+    const response = await fetch('/tables/marketplaceitems?limit=100&sort=-createdat');
+    const data = await response.json();
+    marketplaceItems = data.data;
+    renderMarketplaceItems();
+  } catch (error) {
+    showEmptyState('marketplace', 'Failed to load items. Please refresh the page.');
+  }
+}
+
+async function fetchLostFoundItems() {
+  try {
+    const response = await fetch('/tables/lostfounditems?limit=100&sort=-createdat');
+    const data = await response.json();
+    lostFoundItems = data.data;
+    renderLostFoundItems();
+  } catch (error) {
+    showEmptyState('lost-found', 'Failed to load items. Please refresh the page.');
+  }
+}
+
+// ---- Toast Notifications ----
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ---- Modal Accessibility ----
+function trapFocus(modal) {
+  const focusableEls = modal.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+  const firstEl = focusableEls[0];
+  const lastEl = focusableEls[focusableEls.length - 1];
+  modal.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey && document.activeElement === firstEl) {
+        lastEl.focus();
+        e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        firstEl.focus();
+        e.preventDefault();
+      }
+    }
+    if (e.key === 'Escape') closeModals();
+  });
+}
+
+// ---- Modal Functions ----
+function openPostModal(isLostFound = false) {
+  const modal = document.getElementById('postModal');
+  modal.classList.add('active');
+  // Populate modal-content based on isLostFound
+  trapFocus(modal);
+}
+function closeModals() {
+  document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
+}
+
+// ---- Render Functions ----
+function renderMarketplaceItems() {
+  // Filter and display items in #marketplaceGrid
+}
+
+function renderLostFoundItems() {
+  // Filter and display items in #lostFoundGrid
+}
+
+function showEmptyState(section, message) {
+  const emptyDiv = document.getElementById(section === 'marketplace' ? 'marketplaceEmpty' : 'lostFoundEmpty');
+  if (emptyDiv) {
+    emptyDiv.querySelector('h3').textContent = message;
+    emptyDiv.style.display = 'block';
+  }
+}
+
+// ---- Event Listeners ----
+document.addEventListener('DOMContentLoaded', () => {
+  // Navigation, filter button, and form listeners
+  document.getElementById('postItemBtn').addEventListener('click', () => openPostModal());
+
+  document.querySelectorAll('.close-modal').forEach(btn =>
+    btn.addEventListener('click', closeModals)
+  );
+  // Add section switching, filters, and search listeners
+  fetchMarketplaceItems();
+  fetchLostFoundItems();
+});
+
+// ---- Image Placeholders & Accessible Empty States ----
+// Enhance card image handling, fallback for empty images, add actionable prompts
+
+// ---- Example: Posting an Item ----
+async function createMarketplaceItem(itemData) {
+  try {
+    const response = await fetch('/tables/marketplaceitems', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(itemData)
+    });
+    const newItem = await response.json();
+    fetchMarketplaceItems(); // Refresh the list
+    showToast('Item posted successfully!');
+    closeModals();
+  } catch (err) {
+    showToast('Error posting item.', 'error');
+  }
+}

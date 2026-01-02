@@ -256,33 +256,77 @@ function showItemDetail(itemId) {
     }
     </div>
     
-    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
-      <span class="tag tag-category">${item.category}</span>
-      <span class="tag tag-status ${item.status}">${item.status === 'available' ? 'Available' : 'Sold'}</span>
-      ${item.condition ? `<span class="tag" style="background:var(--primary-light); color:var(--primary-dark);">${item.condition}</span>` : ''}
-    </div>
-
-    <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">${item.title}</h2>
-    <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem;">
-      NPR ${item.price.toLocaleString()}
-    </div>
+    <button class="close-modal detail-close" onclick="closeModals()"><i class="fas fa-times"></i></button>
     
-    <div style="margin-bottom: 1.5rem;">
-      <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Description</h3>
-      <p style="color: var(--dark-light); line-height: 1.7;">${item.description}</p>
-    </div>
+    <div class="detail-container">
+      <!-- Left Column: Image & Actions -->
+      <div class="detail-left">
+        <div class="detail-image-container">
+          ${item.image ?
+      `<img src="${item.image}" alt="${item.title}" class="detail-image">` :
+      `<div style="color: var(--gray-light);"><i class="fas fa-box fa-4x"></i></div>`
+    }
+        </div>
+        
+        <div class="detail-actions">
+            <!-- Simulated Chat Button -->
+            <a href="mailto:${item.contact}" class="btn btn-outline btn-lg" style="text-decoration:none; display:flex; align-items:center;">
+                Chat Now
+            </a>
+            <!-- Simulated Buy Button -->
+            <button class="btn btn-success btn-lg">
+                BUY
+            </button>
+        </div>
+      </div>
 
-    <div style="background: #f1f5f9; padding: 1rem; border-radius: 12px; margin-top: 2rem;">
-      <h3 style="font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-user-circle"></i> Seller Info
-      </h3>
-      <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.2rem;">${item.sellerName || 'Unknown Seller'}</p>
-      <p style="color: var(--gray); font-size: 0.95rem;"><i class="fas fa-envelope-open-text" style="margin-right:0.5rem;"></i> ${item.contact}</p>
+      <!-- Right Column: Info -->
+      <div class="detail-right">
+        <div class="detail-header">
+           <div class="detail-title">${item.title}</div>
+           <div class="detail-price">Rs ${item.price.toLocaleString()}</div>
+        </div>
+
+        <div class="meta-grid">
+            <div class="meta-item">
+                <label>Category</label>
+                <div class="meta-badge">${item.category}</div>
+            </div>
+            <div class="meta-item">
+                <label>Condition</label>
+                <div class="meta-badge">
+                   <i class="fas fa-tag" style="font-size:0.8rem;"></i> ${item.condition || 'Pre-owned'}
+                </div>
+            </div>
+            <div class="meta-item">
+                <label>Status</label>
+                <div class="meta-badge status-badge">${item.status}</div>
+            </div>
+        </div>
+
+        <div class="detail-description">
+            <h4>Description</h4>
+            <p>${item.description}</p>
+        </div>
+
+        <div class="detail-footer">
+            <div style="font-size:0.9rem; color:var(--gray); margin-bottom:1rem;">
+                <i class="far fa-calendar-alt"></i> Posted ${formatDate(item.createdAt)}
+            </div>
+            
+            <div style="font-weight:600; font-size:1rem;">Contact Seller</div>
+            <div class="seller-info">
+                <div class="seller-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="seller-details">
+                    <h5>${item.sellerName || 'Unknown Seller'}</h5>
+                    <p>${item.contact}</p>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
-    
-    <p style="margin-top: 1rem; color: var(--gray); font-size: 0.9rem; text-align: right;">
-      Posted ${formatDate(item.createdAt)}
-    </p>
   `;
 
   const modal = document.getElementById('detailModal');

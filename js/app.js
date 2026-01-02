@@ -279,7 +279,7 @@ function showItemDetail(itemId) {
     <button class="close-modal detail-close" onclick="closeModals()"><i class="fas fa-times"></i></button>
     
     <div class="detail-container">
-      <!-- Left Column: Image & Actions -->
+      <!-- Left Column: Image -->
       <div class="detail-left">
         <div class="detail-image-container">
           ${item.image ?
@@ -287,72 +287,60 @@ function showItemDetail(itemId) {
       `<div style="color: var(--gray-light);"><i class="fas fa-box fa-4x"></i></div>`
     }
         </div>
-        
-        <div class="detail-actions" style="display: flex; flex-direction: column; gap: 1rem;">
-             <!-- Quantity Display -->
-             <div style="display: flex; align-items: center; justify-content: center; background: #f1f5f9; padding: 0.8rem; border-radius: 12px; font-weight: 600; color: var(--dark-light);">
-                <span style="margin-right: 0.5rem;">Quantity:</span>
-                <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">${item.quantity || 1}</span>
-            </div>
-
-            <!-- Buy Button -->
-            <button id="buy-action-btn" class="btn btn-success btn-lg" style="width: 100%;" onclick="confirmBuy(${item.id})">
-                BUY
-            </button>
-        </div>
       </div>
 
       <!-- Right Column: Info -->
+      <div class="detail-right">
+        
         <div class="detail-header">
-           <div class="detail-title">${item.title}</div>
+           <div class="tags" style="margin-bottom: 0.5rem;">
+             <span class="tag tag-category">${item.category}</span>
+             <span class="tag tag-status ${item.status}">${item.status === 'available' ? 'Available' : 'Sold'}</span>
+             <span class="tag" style="background: #f1f5f9; color: var(--dark-light);"><i class="fas fa-tag" style="font-size:0.8rem;"></i> ${item.condition || 'Pre-owned'}</span>
+           </div>
+           <h2 class="detail-title">${item.title}</h2>
            <div class="detail-price">Rs ${item.price.toLocaleString()}</div>
         </div>
 
-        <div class="meta-grid">
-            <div class="meta-item">
-                <label>Category</label>
-                <div class="meta-badge">${item.category}</div>
-            </div>
-            <div class="meta-item">
-                <label>Condition</label>
-                <div class="meta-badge">
-                   <i class="fas fa-tag" style="font-size:0.8rem;"></i> ${item.condition || 'Pre-owned'}
-                </div>
-            </div>
-            <div class="meta-item">
-                <label>Status</label>
-                <div class="meta-badge status-badge">${item.status}</div>
-            </div>
-        </div>
-
         <div class="detail-description">
-            <h4>Description</h4>
+            <h4 style="font-weight: 600; color: var(--dark); margin-bottom: 0.5rem;">About this item</h4>
             <p>${item.description}</p>
         </div>
 
-        <div class="detail-footer">
-            <div style="font-size:0.9rem; color:var(--gray); margin-bottom:1rem;">
-                <i class="far fa-calendar-alt"></i> Posted ${formatDate(item.createdAt)}
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f1f5f9;">
+            <!-- Actions Row -->
+            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+                <!-- Quantity -->
+                 <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray); font-size: 0.9rem;">
+                    <span>Quantity:</span>
+                    <span style="font-weight: 600; color: var(--dark);">${item.quantity || 1}</span>
+                </div>
+            </div>
+
+            <!-- Buy Button -->
+            <button id="buy-action-btn" class="btn btn-success btn-lg" style="width: 100%; margin-bottom: 1.5rem;" onclick="confirmBuy(${item.id})">
+                Buy Now
+            </button>
+
+            <!-- Seller Info (Simple) -->
+            <div class="seller-simple" style="display: flex; align-items: center; gap: 0.8rem;">
+                <div class="seller-avatar-sm" style="width: 40px; height: 40px; background: #e0e7ff; color: #4338ca; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div>
+                     <div style="font-weight: 600; font-size: 0.95rem; color: var(--dark);">${item.sellerName || 'Unknown Seller'}</div>
+                     <div style="font-size: 0.85rem; margin-top: 2px;">
+                        <span id="seller-contact-blur" style="color: var(--gray); letter-spacing: 1px;">••••••••••</span>
+                        <span id="seller-contact-info" style="display: none; color: var(--primary-color); font-weight: 500;">
+                            ${item.contact}
+                        </span>
+                     </div>
+                </div>
+                <div style="margin-left: auto; font-size: 0.8rem; color: var(--gray-light);">
+                    Posted ${formatDate(item.createdAt)}
+                </div>
             </div>
             
-            <div style="font-weight:600; font-size:1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Seller Contact</div>
-            <div class="seller-info" style="background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
-                <div class="seller-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="seller-details">
-                    <h5>${item.sellerName || 'Unknown Seller'}</h5>
-                    <!-- Hidden Contact Info -->
-                    <p id="seller-contact-info" style="display: none; color: var(--primary-color); font-weight: 600;">
-                        <i class="fas fa-phone-alt"></i> ${item.contact}
-                    </p>
-                    <!-- Blurred Placeholder -->
-                    <p id="seller-contact-blur" style="color: var(--gray-light); letter-spacing: 2px;">
-                        <i class="fas fa-lock"></i> •••••••••••
-                    </p>
-                </div>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem; text-align: center;">Based on your request, contact info is hidden until you confirm purchase.</p>
         </div>
       </div>
     </div>

@@ -451,7 +451,8 @@ button {
   border-radius: 20px;
   padding: 2rem;
   position: relative;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+  /* Softened shadow */
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   max-height: 90vh;
   overflow-y: auto;
@@ -481,20 +482,23 @@ button {
 }
 
 .detail-left {
-  background: #f8fafc;
+  background: #fdfdfd;
+  /* Lighter background */
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid #e2e8f0;
+  justify-content: center;
+  /* Center image */
+  align-items: center;
+  border-right: 1px solid #f1f5f9;
+  /* Softer border */
   overflow-y: auto;
-  /* Allow left side scroll if needed */
 }
 
 .detail-right {
-  padding: 2.5rem;
+  padding: 3rem;
+  /* More whitespace */
   overflow-y: auto;
-  /* Enable scrolling for details */
   position: relative;
 }
 
@@ -522,169 +526,85 @@ button {
 
 
 .detail-image-container {
-  flex: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  border-radius: 12px;
   padding: 1rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 2rem;
+  margin-bottom: 0;
+  /* Remove bottom margin */
 }
 
 .detail-image {
   max-width: 100%;
-  max-height: 350px;
+  max-height: 400px;
   object-fit: contain;
+  mix-blend-mode: multiply;
+  /* Helps integrate image if it has white bg */
 }
 
-.detail-actions {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  /* Ratio for Chat / Buy */
-  gap: 1rem;
-}
-
-.btn-outline {
-  background: transparent;
-  border: 2px solid #e2e8f0;
-  color: var(--dark);
-  justify-content: center;
-}
-
-.btn-outline:hover {
-  border-color: var(--dark-light);
-  background: transparent;
-  transform: translateY(-2px);
-}
-
+/* Cleaner Button */
 .btn-lg {
-  padding: 1rem 1.5rem;
-  font-size: 1.1rem;
-}
-
-.btn-success {
-  background: var(--success-color);
-  color: white;
-  justify-content: center;
-  text-transform: uppercase;
+  padding: 0.9rem 1.5rem;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  font-weight: 600;
   letter-spacing: 0.5px;
+  box-shadow: none;
+  /* Remove default shadow for cleaner look */
 }
 
-.btn-success:hover {
-  background: #059669;
-}
-
-
-.detail-right {
-  padding: 2.5rem;
-  overflow-y: auto;
-  position: relative;
+.btn-lg:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .detail-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 1.5rem;
+  right: 1.5rem;
   z-index: 10;
+  color: var(--gray-light);
+  background: transparent;
+  width: auto;
+  height: auto;
+}
+
+.detail-close:hover {
+  background: transparent;
+  color: var(--danger-color);
 }
 
 .detail-header {
-  margin-bottom: 1.5rem;
-}
-
-.detail-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.detail-price {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--primary-color);
-}
-
-.meta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.meta-item label {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--gray);
-  margin-bottom: 0.4rem;
+.detail-title {
+  font-size: 2rem;
+  /* Larger Title */
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--dark);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
 }
 
-.meta-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: #f1f5f9;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
+.detail-price {
+  font-size: 1.5rem;
   font-weight: 600;
-  font-size: 0.95rem;
   color: var(--dark-light);
-}
-
-.status-badge {
-  background: var(--success-bg);
-  color: var(--success-color);
+  /* More subtle price color */
+  margin-top: 0.5rem;
 }
 
 .detail-description {
   margin-bottom: 2rem;
 }
 
-.detail-description h4 {
-  color: var(--gray);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
 .detail-description p {
   color: var(--dark-light);
-  line-height: 1.7;
-}
-
-.detail-footer {
-  border-top: 1px solid #e2e8f0;
-  padding-top: 1.5rem;
-}
-
-.seller-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.seller-avatar {
-  width: 48px;
-  height: 48px;
-  background: var(--primary-light);
-  color: var(--primary-color);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
-
-.seller-details h5 {
-  font-size: 1rem;
-  margin-bottom: 0.2rem;
-}
-
-.seller-details p {
-  color: var(--gray);
-  font-size: 0.9rem;
+  line-height: 1.8;
+  /* Better readability */
+  font-size: 1.05rem;
 }
 
 .close-modal {

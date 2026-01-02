@@ -19,6 +19,7 @@ const mockData = [
     status: "available",
     contact: "john@ku.edu.np",
     condition: "Like New",
+    quantity: 1,
     sellerName: "John Doe",
     createdAt: new Date(2025, 0, 1).toISOString(),
     isFavorite: false
@@ -33,6 +34,7 @@ const mockData = [
     status: "available",
     contact: "sarah@ku.edu.np",
     condition: "Used - Good",
+    quantity: 1,
     sellerName: "Sarah Smith",
     createdAt: new Date(2024, 11, 28).toISOString(),
     isFavorite: true
@@ -47,6 +49,7 @@ const mockData = [
     status: "sold",
     contact: "mike@ku.edu.np",
     condition: "Used - Fair",
+    quantity: 1,
     sellerName: "Mike Johnson",
     createdAt: new Date(2024, 11, 25).toISOString(),
     isFavorite: false
@@ -61,6 +64,7 @@ const mockData = [
     status: "available",
     contact: "alex@ku.edu.np",
     condition: "Like New",
+    quantity: 2,
     sellerName: "Alex Brown",
     createdAt: new Date(2024, 11, 30).toISOString(),
     isFavorite: false
@@ -75,6 +79,7 @@ const mockData = [
     status: "available",
     contact: "priya@ku.edu.np",
     condition: "New",
+    quantity: 10,
     sellerName: "Priya Sharma",
     createdAt: new Date(2025, 0, 2).toISOString(),
     isFavorite: false
@@ -224,6 +229,29 @@ function renderMarketplaceItems() {
   }
 }
 
+function confirmBuy(itemId) {
+  if (confirm("Are you sure you want to buy this item?")) {
+    const item = marketplaceItems.find(i => i.id === itemId);
+    if (!item) return;
+
+    // Reveal contact info
+    const contactElement = document.getElementById('seller-contact-info');
+    const blurElement = document.getElementById('seller-contact-blur');
+    const buyBtn = document.getElementById('buy-action-btn');
+
+    if (contactElement) contactElement.style.display = 'block';
+    if (blurElement) blurElement.style.display = 'none';
+    if (buyBtn) {
+      buyBtn.textContent = 'Contact Revealed';
+      buyBtn.classList.remove('btn-success');
+      buyBtn.style.background = 'var(--gray)';
+      buyBtn.disabled = true;
+    }
+
+    showToast("Seller contact revealed! You can now contact them.", "success");
+  }
+}
+
 // ===== Modal Functions =====
 function openPostModal() {
   const modal = document.getElementById('postModal');
@@ -248,7 +276,7 @@ function showItemDetail(itemId) {
   if (!content) return;
 
   content.innerHTML = `
-    <button class="close-modal" onclick="closeModals()"><i class="fas fa-times"></i></button>
+      <button class="close-modal" onclick="closeModals()"><i class="fas fa-times"></i></button>
     <div style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden; display: flex; justify-content: center; background: #f8fafc;">
       ${item.image ?
       `<img src="${item.image}" alt="${item.title}" style="max-height: 400px; width: 100%; object-fit: contain;">` :
@@ -268,20 +296,21 @@ function showItemDetail(itemId) {
     }
         </div>
         
-        <div class="detail-actions">
-            <!-- Simulated Chat Button -->
-            <a href="mailto:${item.contact}" class="btn btn-outline btn-lg" style="text-decoration:none; display:flex; align-items:center;">
-                Chat Now
-            </a>
-            <!-- Simulated Buy Button -->
-            <button class="btn btn-success btn-lg">
-                BUY
+        <div class="detail-actions" style="display: flex; flex-direction: column; gap: 1rem;">
+             <!-- Quantity Display -->
+             <div style="display: flex; align-items: center; justify-content: center; background: #f1f5f9; padding: 0.8rem; border-radius: 12px; font-weight: 600; color: var(--dark-light);">
+                <span style="margin-right: 0.5rem;">Quantity:</span>
+                <span style="background: white; padding: 0.2rem 0.8rem; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">${item.quantity || 1}</span>
+            </div>
+
+            <!-- Buy Button -->
+            <button id="buy-action-btn" class="btn btn-success btn-lg" style="width: 100%;" onclick="confirmBuy(${item.id})">
+                BUY / REVEAL CONTACT
             </button>
         </div>
       </div>
 
       <!-- Right Column: Info -->
-      <div class="detail-right">
         <div class="detail-header">
            <div class="detail-title">${item.title}</div>
            <div class="detail-price">Rs ${item.price.toLocaleString()}</div>
@@ -314,20 +343,28 @@ function showItemDetail(itemId) {
                 <i class="far fa-calendar-alt"></i> Posted ${formatDate(item.createdAt)}
             </div>
             
-            <div style="font-weight:600; font-size:1rem;">Contact Seller</div>
-            <div class="seller-info">
+            <div style="font-weight:600; font-size:1rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Seller Contact</div>
+            <div class="seller-info" style="background: #f8fafc; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
                 <div class="seller-avatar">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="seller-details">
                     <h5>${item.sellerName || 'Unknown Seller'}</h5>
-                    <p>${item.contact}</p>
+                    <!-- Hidden Contact Info -->
+                    <p id="seller-contact-info" style="display: none; color: var(--primary-color); font-weight: 600;">
+                        <i class="fas fa-phone-alt"></i> ${item.contact}
+                    </p>
+                    <!-- Blurred Placeholder -->
+                    <p id="seller-contact-blur" style="color: var(--gray-light); letter-spacing: 2px;">
+                        <i class="fas fa-lock"></i> •••••••••••
+                    </p>
                 </div>
             </div>
+            <p style="font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem; text-align: center;">Based on your request, contact info is hidden until you confirm purchase.</p>
         </div>
       </div>
     </div>
-  `;
+      `;
 
   const modal = document.getElementById('detailModal');
   if (modal) modal.classList.add('active');
@@ -345,6 +382,7 @@ function handlePostItem(e) {
     condition: document.getElementById('itemCondition').value,
     description: document.getElementById('itemDescription').value,
     image: document.getElementById('itemImage').value,
+    quantity: 1,
     status: 'available',
     sellerName: document.getElementById('itemSellerName').value,
     contact: document.getElementById('contactInfo').value,
@@ -387,7 +425,7 @@ function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.innerHTML = `
-    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> 
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
     <span>${message}</span>
   `;
   document.body.appendChild(toast);

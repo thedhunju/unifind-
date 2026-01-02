@@ -7,71 +7,84 @@ let currentFilter = "all";
 let searchQuery = "";
 let categoryFilter = "";
 
-// ===== Mock Data =====
+// ===== Mock Data (Fallback) =====
 const mockData = [
   {
     id: 1,
     title: "MacBook Pro 2020",
     price: 85000,
     category: "Electronics",
-    description: "Barely used MacBook Pro 13-inch, 8GB RAM, 256GB SSD. Perfect condition!",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+    description: "Barely used MacBook Pro 13-inch, 8GB RAM, 256GB SSD. Perfect condition! Battery cycle count is only 45. Comes with original charger and box.",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&q=80",
     status: "available",
     contact: "john@ku.edu.np",
-    createdAt: new Date(2025, 0, 1)
+    createdAt: new Date(2025, 0, 1).toISOString(),
+    isFavorite: false
   },
   {
     id: 2,
     title: "Engineering Textbooks Set",
     price: 3500,
     category: "Books",
-    description: "Complete set of first-year engineering books. Minimal highlighting.",
-    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+    description: "Complete set of first-year engineering books. Minimal highlighting. Includes Calculus, Physics, and C Programming.",
+    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&q=80",
     status: "available",
     contact: "sarah@ku.edu.np",
-    createdAt: new Date(2024, 11, 28)
+    createdAt: new Date(2024, 11, 28).toISOString(),
+    isFavorite: true
   },
   {
     id: 3,
     title: "Study Desk with Chair",
     price: 4500,
     category: "Furniture",
-    description: "Sturdy wooden desk with comfortable chair. Great for dorm room!",
-    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400",
+    description: "Sturdy wooden desk with comfortable chair. Great for dorm room! Slight scratch on the left leg but barely visible.",
+    image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=500&q=80",
     status: "sold",
     contact: "mike@ku.edu.np",
-    createdAt: new Date(2024, 11, 25)
+    createdAt: new Date(2024, 11, 25).toISOString(),
+    isFavorite: false
   },
   {
     id: 4,
     title: "Gaming Mouse & Keyboard",
     price: 2800,
     category: "Electronics",
-    description: "RGB gaming peripherals, barely used. Original packaging included.",
-    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+    description: "RGB gaming peripherals, barely used. Original packaging included. Mechanical keyboard with Blue switches.",
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80",
     status: "available",
     contact: "alex@ku.edu.np",
-    createdAt: new Date(2024, 11, 30)
+    createdAt: new Date(2024, 11, 30).toISOString(),
+    isFavorite: false
   },
   {
     id: 5,
     title: "Scientific Calculator",
     price: 800,
     category: "Stationery",
-    description: "Casio fx-991ES Plus calculator. Perfect for engineering students.",
-    image: "",
+    description: "Casio fx-991ES Plus calculator. Perfect for engineering students. Still in warranty.",
+    image: "", // Placeholder test
     status: "available",
     contact: "priya@ku.edu.np",
-    createdAt: new Date(2025, 0, 2)
+    createdAt: new Date(2025, 0, 2).toISOString(),
+    isFavorite: false
   }
 ];
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded, initializing app...');
-  
-  // Load mock data
-  marketplaceItems = [...mockData];
+
+  // Load data from LocalStorage
+  if (localStorage.getItem('marketplaceItems')) {
+    marketplaceItems = JSON.parse(localStorage.getItem('marketplaceItems'));
+    console.log('Loaded items from LocalStorage');
+  } else {
+    marketplaceItems = [...mockData];
+    saveItems();
+    console.log('Initialized with mock data');
+  }
+
   renderMarketplaceItems();
 
   // Event Listeners
@@ -84,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (postForm) postForm.addEventListener('submit', handlePostItem);
   if (searchInput) searchInput.addEventListener('input', handleSearch);
   if (categorySelect) categorySelect.addEventListener('change', handleCategoryFilter);
-  
+
   // Filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -110,6 +123,36 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('✅ App initialized successfully!');
 });
 
+// ===== Logic Functions =====
+
+function saveItems() {
+  localStorage.setItem('marketplaceItems', JSON.stringify(marketplaceItems));
+}
+
+function toggleFavorite(e, id) {
+  e.stopPropagation(); // Prevent opening detail modal
+  const item = marketplaceItems.find(i => i.id === id);
+  if (item) {
+    item.isFavorite = !item.isFavorite;
+    saveItems();
+    renderMarketplaceItems(); // Re-render to show updated icon
+
+    if (item.isFavorite) {
+      showToast('Added to favorites', 'success');
+    }
+  }
+}
+
+function deleteItem(e, id) {
+  e.stopPropagation(); // Prevent opening detail modal
+  if (confirm('Are you sure you want to delete this item?')) {
+    marketplaceItems = marketplaceItems.filter(i => i.id !== id);
+    saveItems();
+    renderMarketplaceItems();
+    showToast('Item deleted successfully', 'success');
+  }
+}
+
 // ===== Render Functions =====
 function renderMarketplaceItems() {
   console.log('Rendering items...');
@@ -117,46 +160,53 @@ function renderMarketplaceItems() {
   const loading = document.getElementById('marketplaceLoading');
   const empty = document.getElementById('marketplaceEmpty');
 
-  if (!grid) {
-    console.error('marketplaceGrid element not found!');
-    return;
-  }
+  if (!grid) return;
 
   // Filter items
   let filteredItems = marketplaceItems.filter(item => {
     const matchesFilter = currentFilter === 'all' || item.status === currentFilter;
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !categoryFilter || item.category === categoryFilter;
     return matchesFilter && matchesSearch && matchesCategory;
   });
 
-  console.log(`Found ${filteredItems.length} items`);
-
   // Show/hide states
   if (loading) loading.style.display = 'none';
-  
+
   if (filteredItems.length === 0) {
     grid.style.display = 'none';
     if (empty) empty.style.display = 'block';
   } else {
     grid.style.display = 'grid';
     if (empty) empty.style.display = 'none';
-    
+
     // Render items
     grid.innerHTML = filteredItems.map(item => `
       <div class="item-card" onclick="showItemDetail(${item.id})">
         <div class="item-image">
-          ${item.image ? `<img src="${item.image}" alt="${item.title}">` : '<i class="fas fa-box"></i>'}
+          ${item.image ? `<img src="${item.image}" alt="${item.title}">` : '<i class="fas fa-box" style="font-size:3rem; color:var(--gray-light);"></i>'}
+          <div class="card-actions">
+            <button class="action-btn favorite ${item.isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, ${item.id})" aria-label="Toggle Favorite">
+              <i class="${item.isFavorite ? 'fas' : 'far'} fa-heart"></i>
+            </button>
+            <button class="action-btn delete" onclick="deleteItem(event, ${item.id})" aria-label="Delete Item">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
         </div>
         <div class="item-info">
-          <h3 class="item-title">${item.title}</h3>
+          <div class="tags">
+             <span class="tag tag-category">${item.category}</span>
+             <span class="tag tag-status ${item.status}">${item.status === 'available' ? 'Available' : 'Sold'}</span>
+          </div>
+          <div class="item-header">
+            <h3 class="item-title">${item.title}</h3>
+          </div>
           <div class="item-price">NPR ${item.price.toLocaleString()}</div>
-          <span class="item-category">${item.category}</span>
-          <span class="item-status ${item.status}">${item.status === 'available' ? '✓ Available' : '✕ Sold'}</span>
           <p class="item-desc">${item.description}</p>
           <div class="item-meta">
-            <i class="fas fa-clock"></i> ${formatDate(item.createdAt)}
+            <i class="far fa-clock"></i> ${formatDate(item.createdAt)}
           </div>
         </div>
       </div>
@@ -166,7 +216,6 @@ function renderMarketplaceItems() {
 
 // ===== Modal Functions =====
 function openPostModal() {
-  console.log('Opening post modal...');
   const modal = document.getElementById('postModal');
   if (modal) {
     modal.classList.add('active');
@@ -176,14 +225,12 @@ function openPostModal() {
 }
 
 function closeModals() {
-  console.log('Closing modals...');
   document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
   const form = document.getElementById('postItemForm');
   if (form) form.reset();
 }
 
 function showItemDetail(itemId) {
-  console.log('Showing item detail:', itemId);
   const item = marketplaceItems.find(i => i.id === itemId);
   if (!item) return;
 
@@ -191,22 +238,41 @@ function showItemDetail(itemId) {
   if (!content) return;
 
   content.innerHTML = `
-    <button class="close-modal" aria-label="Close Modal" onclick="closeModals()">&times;</button>
-    <div style="text-align: center; margin-bottom: 1.5rem;">
-      ${item.image ? `<img src="${item.image}" alt="${item.title}" style="max-width: 100%; border-radius: var(--border-radius); max-height: 300px; object-fit: cover;">` : '<div style="font-size: 5rem; color: var(--gray-light);"><i class="fas fa-box"></i></div>'}
+    <button class="close-modal" onclick="closeModals()"><i class="fas fa-times"></i></button>
+    <div style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden; display: flex; justify-content: center; background: #f8fafc;">
+      ${item.image ?
+      `<img src="${item.image}" alt="${item.title}" style="max-height: 400px; width: 100%; object-fit: contain;">` :
+      `<div style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--gray-light);"><i class="fas fa-box fa-3x"></i></div>`
+    }
     </div>
-    <h2>${item.title}</h2>
-    <div style="margin: 1rem 0;">
-      <span class="item-price" style="font-size: 1.5rem;">NPR ${item.price.toLocaleString()}</span>
-      <span class="item-status ${item.status}" style="margin-left: 1rem;">${item.status === 'available' ? '✓ Available' : '✕ Sold'}</span>
+    
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+      <span class="tag tag-category">${item.category}</span>
+      <span class="tag tag-status ${item.status}">${item.status === 'available' ? 'Available' : 'Sold'}</span>
     </div>
-    <p style="margin: 1rem 0;"><strong>Category:</strong> ${item.category}</p>
-    <p style="margin: 1rem 0;"><strong>Description:</strong></p>
-    <p style="color: var(--dark-light); line-height: 1.8;">${item.description}</p>
-    <p style="margin: 1.5rem 0;"><strong>Contact:</strong> ${item.contact}</p>
-    <p style="color: var(--gray); font-size: 0.9rem;"><i class="fas fa-clock"></i> Posted ${formatDate(item.createdAt)}</p>
+
+    <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">${item.title}</h2>
+    <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem;">
+      NPR ${item.price.toLocaleString()}
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Description</h3>
+      <p style="color: var(--dark-light); line-height: 1.7;">${item.description}</p>
+    </div>
+
+    <div style="background: #f1f5f9; padding: 1rem; border-radius: 12px; margin-top: 2rem;">
+      <h3 style="font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-circle"></i> Seller Contact
+      </h3>
+      <p style="font-weight: 500; font-size: 1.1rem;">${item.contact}</p>
+    </div>
+    
+    <p style="margin-top: 1rem; color: var(--gray); font-size: 0.9rem; text-align: right;">
+      Posted ${formatDate(item.createdAt)}
+    </p>
   `;
-  
+
   const modal = document.getElementById('detailModal');
   if (modal) modal.classList.add('active');
 }
@@ -214,8 +280,7 @@ function showItemDetail(itemId) {
 // ===== Form Handlers =====
 function handlePostItem(e) {
   e.preventDefault();
-  console.log('Posting new item...');
-  
+
   const newItem = {
     id: Date.now(),
     title: document.getElementById('itemTitle').value,
@@ -225,13 +290,16 @@ function handlePostItem(e) {
     image: document.getElementById('itemImage').value,
     status: 'available',
     contact: document.getElementById('contactInfo').value,
-    createdAt: new Date()
+    createdAt: new Date().toISOString(),
+    isFavorite: false
   };
 
   marketplaceItems.unshift(newItem);
+  saveItems();
+
   renderMarketplaceItems();
   closeModals();
-  showToast('Item posted successfully!');
+  showToast('Item posted successfully!', 'success');
 }
 
 function handleSearch(e) {
@@ -245,21 +313,30 @@ function handleCategoryFilter(e) {
 }
 
 // ===== Helper Functions =====
-function formatDate(date) {
+function formatDate(dateString) {
+  const date = new Date(dateString);
   const now = new Date();
-  const diff = now - date;
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 7) return `${days} days ago`;
+  const diffTime = Math.abs(now - date);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 30) return `${diffDays} days ago`;
   return date.toLocaleDateString();
 }
 
 function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+  toast.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> 
+    <span>${message}</span>
+  `;
   document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.style.animation = 'slideIn 0.3s reverse forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }

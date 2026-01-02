@@ -29,7 +29,7 @@
         <p class="hero-subtitle">Kathmandu University's Student Marketplace</p>
         <div class="search-bar">
           <i class="fas fa-search search-icon"></i>
-          <input id="searchInput" type="text" placeholder="Search items..." aria-label="Search for items">
+          <input id="searchInput" type="text" placeholder="Search for items, books, furniture..." aria-label="Search for items">
           <select class="category-select" id="categorySelect" aria-label="Filter by category">
             <option value="">All Categories</option>
             <option value="Electronics">Electronics</option>
@@ -46,22 +46,26 @@
 
     <section class="main-content container">
       <div class="section-header">
-        <h2><i class="fas fa-store"></i> Marketplace</h2>
+        <h2><i class="fas fa-store-alt" style="color: var(--primary-color);"></i> Marketplace</h2>
         <div class="filter-buttons" role="group" aria-label="Marketplace filters">
           <button class="filter-btn active" data-filter="all">All Items</button>
           <button class="filter-btn" data-filter="available">Available</button>
           <button class="filter-btn" data-filter="sold">Sold</button>
         </div>
       </div>
+      
+      <!-- Grid -->
       <div class="items-grid" id="marketplaceGrid" aria-live="polite"></div>
+      
+      <!-- States -->
       <div class="loading" id="marketplaceLoading">
-        <i class="fas fa-spinner fa-spin"></i>
+        <i class="fas fa-circle-notch fa-spin"></i>
         <p>Loading items...</p>
       </div>
       <div class="empty-state" id="marketplaceEmpty">
-        <i class="fas fa-inbox"></i>
+        <i class="fas fa-search"></i>
         <h3>No items found</h3>
-        <p>Be the first to post an item!</p>
+        <p>Try adjusting your search or filters.</p>
         <button class="btn" style="margin-top: 1rem;" onclick="openPostModal()">Post an Item</button>
       </div>
     </section>
@@ -71,42 +75,44 @@
   <div class="modal" id="postModal" aria-modal="true" role="dialog">
     <div class="modal-content">
       <button class="close-modal" aria-label="Close Modal" onclick="closeModals()">&times;</button>
-      <h2><i class="fas fa-plus-circle"></i> Post New Item</h2>
+      <h2><i class="fas fa-plus-circle" style="color: var(--primary-color);"></i> Post New Item</h2>
       <form id="postItemForm">
         <div class="form-group">
           <label for="itemTitle">Item Title *</label>
-          <input type="text" id="itemTitle" required placeholder="e.g., iPhone 13 Pro">
+          <input type="text" id="itemTitle" required placeholder="e.g., iPhone 13 Pro" maxlength="50">
         </div>
-        <div class="form-group">
-          <label for="itemPrice">Price (NPR) *</label>
-          <input type="number" id="itemPrice" required placeholder="e.g., 5000" min="0">
-        </div>
-        <div class="form-group">
-          <label for="itemCategory">Category *</label>
-          <select id="itemCategory" required>
-            <option value="">Select Category</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Books">Books</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Sports">Sports</option>
-            <option value="Stationery">Stationery</option>
-            <option value="Other">Other</option>
-          </select>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="itemPrice">Price (NPR) *</label>
+            <input type="number" id="itemPrice" required placeholder="e.g., 5000" min="0">
+          </div>
+          <div>
+            <label for="itemCategory">Category *</label>
+            <select id="itemCategory" required>
+              <option value="">Select...</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Books">Books</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Sports">Sports</option>
+              <option value="Stationery">Stationery</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
           <label for="itemDescription">Description *</label>
-          <textarea id="itemDescription" required placeholder="Describe your item..."></textarea>
+          <textarea id="itemDescription" required placeholder="Describe condition, reason for selling, etc..." rows="4"></textarea>
         </div>
         <div class="form-group">
-          <label for="itemImage">Image URL (optional)</label>
+          <label for="itemImage">Image URL (Optional)</label>
           <input type="url" id="itemImage" placeholder="https://example.com/image.jpg">
         </div>
         <div class="form-group">
           <label for="contactInfo">Contact Info *</label>
           <input type="text" id="contactInfo" required placeholder="Email or Phone">
         </div>
-        <button type="submit" class="btn" style="width: 100%;">
+        <button type="submit" class="btn" style="width: 100%; justify-content: center;">
           <i class="fas fa-paper-plane"></i> Post Item
         </button>
       </form>
@@ -116,22 +122,20 @@
   <!-- Item Detail Modal -->
   <div class="modal" id="detailModal" aria-modal="true" role="dialog">
     <div class="modal-content" id="detailContent">
-      <button class="close-modal" aria-label="Close Modal" onclick="closeModals()">&times;</button>
-      <!-- Details will be injected here -->
+      <!-- Content injected by JS -->
     </div>
   </div>
 
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2025 UNI-find. All rights reserved.</p>
+      <p>&copy; 2025 UNI-find. Kathmandu University.</p>
       <div class="footer-links">
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-        <a href="#privacy">Privacy Policy</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
       </div>
     </div>
   </footer>
-
 
 <script src="/js/app.js"></script>
 </body>

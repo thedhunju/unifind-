@@ -1,31 +1,44 @@
 /* ===== CSS Variables & Modern Theme ===== */
 :root {
   /* Modern Indigo-Slate Palette */
-  --primary-color: #6366f1; /* Indigo 500 */
-  --primary-hover: #4f46e5; /* Indigo 600 */
-  --primary-light: #e0e7ff; /* Indigo 100 */
-  --secondary-color: #ec4899; /* Pink 500 */
-  
-  --success-color: #10b981; /* Emerald 500 */
-  --success-bg: #d1fae5;    /* Emerald 100 */
-  --danger-color: #ef4444;  /* Red 500 */
-  --danger-bg: #fee2e2;     /* Red 100 */
-  
-  --dark: #0f172a;          /* Slate 900 */
-  --dark-light: #334155;    /* Slate 700 */
-  --gray: #64748b;          /* Slate 500 */
-  --gray-light: #94a3b8;    /* Slate 400 */
-  --bg-color: #f8fafc;      /* Slate 50 */
+  --primary-color: #6366f1;
+  /* Indigo 500 */
+  --primary-hover: #4f46e5;
+  /* Indigo 600 */
+  --primary-light: #e0e7ff;
+  /* Indigo 100 */
+  --secondary-color: #ec4899;
+  /* Pink 500 */
+
+  --success-color: #10b981;
+  /* Emerald 500 */
+  --success-bg: #d1fae5;
+  /* Emerald 100 */
+  --danger-color: #ef4444;
+  /* Red 500 */
+  --danger-bg: #fee2e2;
+  /* Red 100 */
+
+  --dark: #0f172a;
+  /* Slate 900 */
+  --dark-light: #334155;
+  /* Slate 700 */
+  --gray: #64748b;
+  /* Slate 500 */
+  --gray-light: #94a3b8;
+  /* Slate 400 */
+  --bg-color: #f8fafc;
+  /* Slate 50 */
   --card-bg: #ffffff;
-  
+
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  
+
   --border-radius: 16px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.95);
   --glass-border: 1px solid rgba(255, 255, 255, 0.2);
@@ -48,7 +61,12 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--dark);
   line-height: 1.2;
 }
@@ -95,7 +113,9 @@ button {
 
 .logo i {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  /* Ensure compatibility */
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 1.75rem;
 }
@@ -170,7 +190,9 @@ button {
   letter-spacing: -1px;
   margin-bottom: 0.5rem;
   background: linear-gradient(to right, var(--dark), var(--primary-color));
+  /* Ensure compatibility */
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -307,7 +329,7 @@ button {
   cursor: pointer;
   transition: var(--transition);
   color: var(--gray);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .action-btn:hover {
@@ -494,17 +516,30 @@ button {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* States */
-.loading, .empty-state {
+.loading,
+.empty-state {
   text-align: center;
   padding: 4rem 1rem;
   color: var(--gray);
@@ -542,17 +577,39 @@ button {
   animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.toast.success i { color: var(--success-color); }
-.toast.error i { color: var(--danger-color); }
+.toast.success i {
+  color: var(--success-color);
+}
+
+.toast.error i {
+  color: var(--danger-color);
+}
 
 @keyframes slideIn {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .hero-title { font-size: 2.25rem; }
-  .search-bar { flex-direction: column; }
-  .category-select { border-left: none; border-top: 1px solid #e2e8f0; width: 100%; }
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .category-select {
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+  }
 }

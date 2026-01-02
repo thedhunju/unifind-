@@ -18,6 +18,8 @@ const mockData = [
     image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&q=80",
     status: "available",
     contact: "john@ku.edu.np",
+    condition: "Like New",
+    sellerName: "John Doe",
     createdAt: new Date(2025, 0, 1).toISOString(),
     isFavorite: false
   },
@@ -30,6 +32,8 @@ const mockData = [
     image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&q=80",
     status: "available",
     contact: "sarah@ku.edu.np",
+    condition: "Used - Good",
+    sellerName: "Sarah Smith",
     createdAt: new Date(2024, 11, 28).toISOString(),
     isFavorite: true
   },
@@ -42,6 +46,8 @@ const mockData = [
     image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=500&q=80",
     status: "sold",
     contact: "mike@ku.edu.np",
+    condition: "Used - Fair",
+    sellerName: "Mike Johnson",
     createdAt: new Date(2024, 11, 25).toISOString(),
     isFavorite: false
   },
@@ -54,6 +60,8 @@ const mockData = [
     image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80",
     status: "available",
     contact: "alex@ku.edu.np",
+    condition: "Like New",
+    sellerName: "Alex Brown",
     createdAt: new Date(2024, 11, 30).toISOString(),
     isFavorite: false
   },
@@ -66,6 +74,8 @@ const mockData = [
     image: "", // Placeholder test
     status: "available",
     contact: "priya@ku.edu.np",
+    condition: "New",
+    sellerName: "Priya Sharma",
     createdAt: new Date(2025, 0, 2).toISOString(),
     isFavorite: false
   }
@@ -246,9 +256,10 @@ function showItemDetail(itemId) {
     }
     </div>
     
-    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
       <span class="tag tag-category">${item.category}</span>
       <span class="tag tag-status ${item.status}">${item.status === 'available' ? 'Available' : 'Sold'}</span>
+      ${item.condition ? `<span class="tag" style="background:var(--primary-light); color:var(--primary-dark);">${item.condition}</span>` : ''}
     </div>
 
     <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">${item.title}</h2>
@@ -263,9 +274,10 @@ function showItemDetail(itemId) {
 
     <div style="background: #f1f5f9; padding: 1rem; border-radius: 12px; margin-top: 2rem;">
       <h3 style="font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-user-circle"></i> Seller Contact
+        <i class="fas fa-user-circle"></i> Seller Info
       </h3>
-      <p style="font-weight: 500; font-size: 1.1rem;">${item.contact}</p>
+      <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.2rem;">${item.sellerName || 'Unknown Seller'}</p>
+      <p style="color: var(--gray); font-size: 0.95rem;"><i class="fas fa-envelope-open-text" style="margin-right:0.5rem;"></i> ${item.contact}</p>
     </div>
     
     <p style="margin-top: 1rem; color: var(--gray); font-size: 0.9rem; text-align: right;">
@@ -286,9 +298,11 @@ function handlePostItem(e) {
     title: document.getElementById('itemTitle').value,
     price: parseFloat(document.getElementById('itemPrice').value),
     category: document.getElementById('itemCategory').value,
+    condition: document.getElementById('itemCondition').value,
     description: document.getElementById('itemDescription').value,
     image: document.getElementById('itemImage').value,
     status: 'available',
+    sellerName: document.getElementById('itemSellerName').value,
     contact: document.getElementById('contactInfo').value,
     createdAt: new Date().toISOString(),
     isFavorite: false

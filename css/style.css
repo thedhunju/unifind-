@@ -460,26 +460,24 @@ button {
 /* Special sizing for detail modal */
 #detailModal .modal-content {
   max-width: 900px;
+  width: 95%;
+  /* Better width coverage */
   padding: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  max-height: 85vh;
+  /* Increase height limit */
 }
 
 .detail-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 600px;
-  /* Fixed height for consistent layout */
-}
-
-@media (max-width: 768px) {
-  .detail-container {
-    grid-template-columns: 1fr;
-    height: auto;
-    overflow-y: auto;
-    max-height: 80vh;
-  }
+  grid-template-columns: 1.2fr 1.8fr;
+  /* Gives more space to the details/info */
+  /* Remove fixed height, let it fill available space */
+  flex: 1;
+  overflow: hidden;
+  /* Contain inner scrolls */
 }
 
 .detail-left {
@@ -489,7 +487,39 @@ button {
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid #e2e8f0;
+  overflow-y: auto;
+  /* Allow left side scroll if needed */
 }
+
+.detail-right {
+  padding: 2.5rem;
+  overflow-y: auto;
+  /* Enable scrolling for details */
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .detail-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .detail-left {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.5rem;
+  }
+
+  .detail-right {
+    padding: 1.5rem;
+  }
+}
+
+
+
+
+
 
 .detail-image-container {
   flex: 1;

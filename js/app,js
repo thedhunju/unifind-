@@ -1,3 +1,5 @@
+console.log('🎉 JavaScript loaded successfully!');
+alert('JavaScript is working!');
 // UNI-find Marketplace App - Main JavaScript
 
 // ===== Global State =====

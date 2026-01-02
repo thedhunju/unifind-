@@ -242,7 +242,7 @@ function confirmBuy(itemId) {
     if (contactElement) contactElement.style.display = 'block';
     if (blurElement) blurElement.style.display = 'none';
     if (buyBtn) {
-      buyBtn.textContent = 'Contact Revealed';
+      buyBtn.textContent = 'Purchased';
       buyBtn.classList.remove('btn-success');
       buyBtn.style.background = 'var(--gray)';
       buyBtn.disabled = true;
@@ -276,14 +276,6 @@ function showItemDetail(itemId) {
   if (!content) return;
 
   content.innerHTML = `
-      <button class="close-modal" onclick="closeModals()"><i class="fas fa-times"></i></button>
-    <div style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden; display: flex; justify-content: center; background: #f8fafc;">
-      ${item.image ?
-      `<img src="${item.image}" alt="${item.title}" style="max-height: 400px; width: 100%; object-fit: contain;">` :
-      `<div style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--gray-light);"><i class="fas fa-box fa-3x"></i></div>`
-    }
-    </div>
-    
     <button class="close-modal detail-close" onclick="closeModals()"><i class="fas fa-times"></i></button>
     
     <div class="detail-container">
@@ -305,7 +297,7 @@ function showItemDetail(itemId) {
 
             <!-- Buy Button -->
             <button id="buy-action-btn" class="btn btn-success btn-lg" style="width: 100%;" onclick="confirmBuy(${item.id})">
-                BUY / REVEAL CONTACT
+                BUY
             </button>
         </div>
       </div>

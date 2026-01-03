@@ -17,8 +17,12 @@ const mockData = [
     category: "Electronics",
     description: "Barely used MacBook Pro 13-inch, 8GB RAM, 256GB SSD. Perfect condition! Battery cycle count is only 45. Comes with original charger and box.",
     image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&q=80",
-    status: "available",
-    contact: "john@ku.edu.np",
+    contact: {
+      phone: "9841XXXXXX",
+      email: "john@ku.edu.np",
+      social: "Instagram",
+      handle: "john_doe"
+    },
     condition: "Like New",
     quantity: 1,
     sellerName: "John Doe",
@@ -262,8 +266,32 @@ function handleConfirmBuy() {
   const revealedContact = document.getElementById('revealedContactInfo');
   const revealedSeller = document.getElementById('revealedSellerName');
 
-  if (revealedContact) revealedContact.textContent = item.contact;
   if (revealedSeller) revealedSeller.textContent = item.sellerName || 'Unknown Seller';
+
+  if (revealedContact) {
+    let contactHTML = '';
+    const c = item.contact;
+
+    // Handle legacy string contact vs new object contact
+    if (typeof c === 'string') {
+      contactHTML = `<div><i class="fas fa-phone-alt"></i> ${c}</div>`;
+    } else {
+      if (c.phone) contactHTML += `<div style="margin-bottom:0.5rem;"><i class="fas fa-phone-alt" style="width:20px;"></i> ${c.phone}</div>`;
+      if (c.email) contactHTML += `<div style="margin-bottom:0.5rem;"><i class="fas fa-envelope" style="width:20px;"></i> ${c.email}</div>`;
+      if (c.social && c.handle) {
+        let icon = 'hashtag';
+        if (c.social === 'Instagram') icon = 'instagram';
+        if (c.social === 'Facebook') icon = 'facebook';
+        if (c.social === 'Twitter') icon = 'twitter';
+        if (c.social === 'LinkedIn') icon = 'linkedin';
+
+        contactHTML += `<div style="color:var(--dark); font-size:1.1rem; margin-top:0.8rem;">
+                  <i class="fab fa-${icon}" style="width:20px;"></i> <span style="font-weight:600">${c.handle}</span>
+              </div>`;
+      }
+    }
+    revealedContact.innerHTML = contactHTML;
+  }
 
   // Close confirmation modal
   const confirmModal = document.getElementById('confirmModal');
@@ -389,7 +417,12 @@ function handlePostItem(e) {
     quantity: 1,
     status: 'available',
     sellerName: document.getElementById('itemSellerName').value,
-    contact: document.getElementById('contactInfo').value,
+    contact: {
+      phone: document.getElementById('itemPhone').value,
+      email: document.getElementById('itemEmail').value,
+      social: document.getElementById('itemSocialPlatform').value,
+      handle: document.getElementById('itemSocialHandle').value
+    },
     createdAt: new Date().toISOString(),
     isFavorite: false
   };

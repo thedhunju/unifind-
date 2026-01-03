@@ -128,8 +128,31 @@
             <input type="text" id="itemSellerName" required placeholder="John Doe">
           </div>
           <div>
-            <label for="contactInfo">Contact Info *</label>
-            <input type="text" id="contactInfo" required placeholder="Phone or Email">
+            <label for="itemPhone">Phone Number *</label>
+            <input type="tel" id="itemPhone" required placeholder="98XXXXXXXX">
+          </div>
+        </div>
+
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="itemEmail">Email (Optional)</label>
+            <input type="email" id="itemEmail" placeholder="you@example.com">
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <div style="flex: 1;">
+              <label for="itemSocialPlatform">Social</label>
+              <select id="itemSocialPlatform">
+                <option value="">None</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Twitter">Twitter/X</option>
+                <option value="LinkedIn">LinkedIn</option>
+              </select>
+            </div>
+            <div style="flex: 1.5;">
+              <label for="itemSocialHandle">Handle</label>
+              <input type="text" id="itemSocialHandle" placeholder="@username">
+            </div>
           </div>
         </div>
 

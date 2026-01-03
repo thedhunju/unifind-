@@ -169,6 +169,34 @@
     </div>
   </div>
 
+  <!-- Contact Revealed Modal -->
+  <div class="modal" id="contactRevealedModal" aria-modal="true" role="dialog">
+    <div class="modal-content" style="max-width: 450px; text-align: center;">
+      <div
+        style="width: 60px; height: 60px; background: var(--success-bg); color: var(--success-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; font-size: 2rem;">
+        <i class="fas fa-check"></i>
+      </div>
+      <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem;">Purchase Successful!</h3>
+      <p style="color: var(--gray); margin-bottom: 2rem;">You can now contact the seller directly.</p>
+
+      <div
+        style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+        <div
+          style="font-size: 0.9rem; text-transform: uppercase; color: var(--gray); font-weight: 600; letter-spacing: 1px; margin-bottom: 0.5rem;">
+          Seller Contact</div>
+        <div id="revealedContactInfo" style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
+          <!-- Injected via JS -->
+        </div>
+        <div id="revealedSellerName" style="margin-top: 0.5rem; color: var(--dark-light); font-weight: 500;">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; justify-content: center;"
+        onclick="closeModals()">Close</button>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container">
       <p>&copy; 2025 UNI-find. Kathmandu University.</p>

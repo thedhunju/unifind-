@@ -110,15 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event Listeners
   const postBtn = document.getElementById('postItemBtn');
   const postForm = document.getElementById('postItemForm');
-  const searchInput = document.getElementById('searchInput');
   const categorySelect = document.getElementById('categorySelect');
   const confirmBuyBtn = document.getElementById('confirmBuyBtn');
+  const contactSupportForm = document.getElementById('contactSupportForm');
 
   if (postBtn) postBtn.addEventListener('click', openPostModal);
   if (postForm) postForm.addEventListener('submit', handlePostItem);
   if (searchInput) searchInput.addEventListener('input', handleSearch);
   if (categorySelect) categorySelect.addEventListener('change', handleCategoryFilter);
   if (confirmBuyBtn) confirmBuyBtn.addEventListener('click', handleConfirmBuy);
+  if (contactSupportForm) contactSupportForm.addEventListener('submit', handleContactSupport);
 
   // Filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -314,10 +315,15 @@ function openPostModal() {
   }
 }
 
+function openContactModal() {
+  const modal = document.getElementById('contactUsModal');
+  if (modal) modal.classList.add('active');
+}
+
 function closeModals() {
   document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
-  const form = document.getElementById('postItemForm');
-  if (form) form.reset();
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => form.reset());
 }
 
 function showItemDetail(itemId) {
@@ -443,6 +449,13 @@ function handleSearch(e) {
 function handleCategoryFilter(e) {
   categoryFilter = e.target.value;
   renderMarketplaceItems();
+}
+
+function handleContactSupport(e) {
+  e.preventDefault();
+  // Here you would typically send the data to a backend
+  showToast('Message sent to support! We will reply via email.', 'success');
+  closeModals();
 }
 
 // ===== Helper Functions =====

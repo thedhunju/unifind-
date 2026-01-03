@@ -258,11 +258,20 @@ function handleConfirmBuy() {
     buyBtn.disabled = true;
   }
 
-  showToast("Seller contact revealed! You can now contact them.", "success");
+  // Populate and open Contact Revealed Modal
+  const revealedContact = document.getElementById('revealedContactInfo');
+  const revealedSeller = document.getElementById('revealedSellerName');
 
-  // Close confirmation modal only
+  if (revealedContact) revealedContact.textContent = item.contact;
+  if (revealedSeller) revealedSeller.textContent = item.sellerName || 'Unknown Seller';
+
+  // Close confirmation modal
   const confirmModal = document.getElementById('confirmModal');
   if (confirmModal) confirmModal.classList.remove('active');
+
+  // Open Contact Revealed modal
+  const contactModal = document.getElementById('contactRevealedModal');
+  if (contactModal) contactModal.classList.add('active');
 
   pendingBuyId = null;
 }

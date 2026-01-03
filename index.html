@@ -156,6 +156,19 @@
     </div>
   </div>
 
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmModal" aria-modal="true" role="dialog">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">Confirm Purchase</h3>
+      <p style="color: var(--gray); margin-bottom: 2rem;">Are you sure you want to buy this item? This will reveal the
+        seller's contact information.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button class="btn btn-outline" style="min-width: 100px;" onclick="closeModals()">Cancel</button>
+        <button id="confirmBuyBtn" class="btn btn-success" style="min-width: 100px;">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container">
       <p>&copy; 2025 UNI-find. Kathmandu University.</p>

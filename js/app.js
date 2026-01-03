@@ -6,6 +6,7 @@ let marketplaceItems = [];
 let currentFilter = "all";
 let searchQuery = "";
 let categoryFilter = "";
+let pendingBuyId = null; // Store ID for confirmation modal
 
 // ===== Mock Data (Fallback) =====
 const mockData = [
@@ -107,11 +108,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const postForm = document.getElementById('postItemForm');
   const searchInput = document.getElementById('searchInput');
   const categorySelect = document.getElementById('categorySelect');
+  const confirmBuyBtn = document.getElementById('confirmBuyBtn');
 
   if (postBtn) postBtn.addEventListener('click', openPostModal);
   if (postForm) postForm.addEventListener('submit', handlePostItem);
   if (searchInput) searchInput.addEventListener('input', handleSearch);
   if (categorySelect) categorySelect.addEventListener('change', handleCategoryFilter);
+  if (confirmBuyBtn) confirmBuyBtn.addEventListener('click', handleConfirmBuy);
 
   // Filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -230,26 +233,38 @@ function renderMarketplaceItems() {
 }
 
 function confirmBuy(itemId) {
-  if (confirm("Are you sure you want to buy this item?")) {
-    const item = marketplaceItems.find(i => i.id === itemId);
-    if (!item) return;
+  pendingBuyId = itemId;
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.classList.add('active');
+}
 
-    // Reveal contact info
-    const contactElement = document.getElementById('seller-contact-info');
-    const blurElement = document.getElementById('seller-contact-blur');
-    const buyBtn = document.getElementById('buy-action-btn');
+function handleConfirmBuy() {
+  if (!pendingBuyId) return;
 
-    if (contactElement) contactElement.style.display = 'block';
-    if (blurElement) blurElement.style.display = 'none';
-    if (buyBtn) {
-      buyBtn.textContent = 'Purchased';
-      buyBtn.classList.remove('btn-success');
-      buyBtn.style.background = 'var(--gray)';
-      buyBtn.disabled = true;
-    }
+  const item = marketplaceItems.find(i => i.id === pendingBuyId);
+  if (!item) return;
 
-    showToast("Seller contact revealed! You can now contact them.", "success");
+  // Reveal contact info
+  const contactElement = document.getElementById('seller-contact-info');
+  const blurElement = document.getElementById('seller-contact-blur');
+  const buyBtn = document.getElementById('buy-action-btn');
+
+  if (contactElement) contactElement.style.display = 'inline'; /* Changed to inline for new layout */
+  if (blurElement) blurElement.style.display = 'none';
+  if (buyBtn) {
+    buyBtn.textContent = 'Purchased';
+    buyBtn.classList.remove('btn-success');
+    buyBtn.style.background = 'var(--gray)';
+    buyBtn.disabled = true;
   }
+
+  showToast("Seller contact revealed! You can now contact them.", "success");
+
+  // Close confirmation modal only
+  const confirmModal = document.getElementById('confirmModal');
+  if (confirmModal) confirmModal.classList.remove('active');
+
+  pendingBuyId = null;
 }
 
 // ===== Modal Functions =====

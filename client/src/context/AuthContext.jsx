@@ -1,0 +1,64 @@
+import { createContext, useState, useEffect, useContext } from 'react';
+import api from '../api';
+
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    // Decode token to get user info
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    setUser(payload);
+                } catch (err) {
+                    console.error("Auth check failed", err);
+                    localStorage.removeItem('token');
+                }
+            }
+            setLoading(false);
+        };
+        fetchUser();
+    }, []);
+
+    const login = async (email, name, type, password) => {
+        try {
+            const { data } = await api.post('/auth/kumail', { email, name, type, password });
+            localStorage.setItem('token', data.token);
+
+            const payload = JSON.parse(atob(data.token.split('.')[1]));
+            setUser(payload);
+            return { success: true };
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || 'Authentication failed';
+            return { success: false, message: errorMessage };
+        }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        window.location.href = '/login';
+    };
+
+    // Helper to refresh user data from token or API if needed
+    const refreshUser = (updatedData) => {
+        setUser(prev => ({ ...prev, ...updatedData }));
+    };
+
+    const updateUser = (userData) => {
+        setUser(prev => ({ ...prev, ...userData }));
+    };
+
+    return (
+        <AuthContext.Provider value={{ user, login, logout, updateUser, loading }}>
+            {!loading && children}
+        </AuthContext.Provider>
+    );
+};
